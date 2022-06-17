@@ -6,6 +6,9 @@ using System.Collections.Generic;
 public class PlayerController : MonoBehaviour
 {
     CharacterController characterController;
+    public float hp;
+    public float mana;
+    public float level;
     public float movementSpeed = 1;
     public float gravity = 9.8f;
     public float jumpHeight = 10.0f;
