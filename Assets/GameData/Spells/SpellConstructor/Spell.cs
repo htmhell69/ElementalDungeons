@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Spell : MonoBehaviour
 {
-    SpellData spellData;
-
+    public SpellData spellData;
+    public GameObject caster;
     public virtual void OnCast()
     {
-        Debug.Log("i was casted");
+        Debug.Log("spell was casted");
     }
 }

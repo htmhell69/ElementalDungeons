@@ -7,13 +7,13 @@ public class SpellData : ScriptableObject
     [Header("Spell Info")]
     public string spellName;
     public GameData.Types elementType;
+    public GameData.SpellTypes spellTypes;
     public int manaCost;
     public float castCooldown;
     [Header("Base Stats")]
     public float main;
     public float size;
     public float effectChance;
-    public GameData.Effects effect;
 
     [Header("Projectile Stats")]
     public float range;

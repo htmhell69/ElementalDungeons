@@ -16,7 +16,9 @@ public static class GameData
 
     public enum SpellTypes
     {
-        Projectile
+        Self,
+        Touch,
+        Target
     }
 
     public enum Effects
