@@ -13,7 +13,9 @@ public class SpellData : ScriptableObject
     [Header("Base Stats")]
     public float main;
     public float size;
+    [Range(1, 100)]
     public float effectChance;
+    public float levelMultiplier;
 
     [Header("Projectile Stats")]
     public float range;

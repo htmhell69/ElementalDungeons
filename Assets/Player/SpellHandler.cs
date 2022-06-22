@@ -1,48 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class SpellHandler : MonoBehaviour
 {
     public List<GameObject> currentSpells = new List<GameObject>();
     public SpellBook currentSpellBook;
+    public int currentSpell = 0;
+    private Stats stats;
+    public Slider manaSlider;
+
+    void Start()
+    {
+        stats = GetComponent<Stats>();
+    }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+
+        if (Input.GetMouseButtonDown(0))
         {
-            CastSpell(currentSpellBook.spells[0]);
+            CastSpell(currentSpellBook.spells[currentSpell]);
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetMouseButtonDown(1))
         {
-            CastSpell(currentSpellBook.spells[1]);
+            if (currentSpell >= currentSpellBook.spells.Length)
+            {
+                currentSpell = 0;
+            }
+            else
+            {
+                currentSpell += 1;
+            }
+
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (stats.mana < stats.maxMana)
         {
-            CastSpell(currentSpellBook.spells[2]);
+            stats.mana += 1 * Time.deltaTime * stats.level * stats.levelMultipliers.manaSpeed;
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            CastSpell(currentSpellBook.spells[3]);
-        }
+        manaSlider.value = stats.mana;
+        stats.maxMana = 100 + (stats.level * stats.levelMultipliers.maxMana);
+        manaSlider.maxValue = stats.maxMana;
     }
 
     void CastSpell(GameObject spell)
     {
+
         Spell spellScript = spell.GetComponent<Spell>();
         SpellData spellData = spellScript.spellData;
-        spellScript.caster = gameObject;
-        if (spellData.spellTypes == GameData.SpellTypes.Self)
+        if (stats.mana >= spellData.manaCost)
         {
-            CastSelf(spell);
+            spellScript.caster = gameObject;
+            if (spellData.spellTypes == GameData.SpellTypes.Self)
+            {
+                CastSelf(spell);
+            }
+            else if (spellData.spellTypes == GameData.SpellTypes.Touch)
+            {
+                CastTouch(spell, spellData);
+            }
+            else
+            {
+                CastProjectile(spell, spellData);
+            }
+            stats.mana -= spellData.manaCost;
         }
-        else if (spellData.spellTypes == GameData.SpellTypes.Touch)
-        {
-            CastTouch(spell, spellData);
-        }
-        else
-        {
-            CastProjectile(spell, spellData);
-        }
+
     }
 
     void CastSelf(GameObject spell)
