@@ -18,18 +18,25 @@ public class Projectile : Spell
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject != caster)
+        if (other.gameObject.layer == 7)
         {
-            other.gameObject.GetComponent<Stats>().hp -= spellData.main + caster.GetComponent<Stats>().level * spellData.levelMultiplier;
-            if (Random.Range(1, 100) >= spellData.effectChance)
+            if (other.gameObject != caster)
             {
-                GetComponent<MeshRenderer>().enabled = false;
-                Destroy(this);
+                other.gameObject.GetComponent<Stats>().hp -= spellData.main + caster.GetComponent<Stats>().level * spellData.levelMultiplier;
+                if (Random.Range(1, 100) >= spellData.effectChance)
+                {
+                    GetComponent<MeshRenderer>().enabled = false;
+                    Destroy(this);
+                }
+                else
+                {
+                    Destroy(this.gameObject);
+                }
             }
-            else
-            {
-                Destroy(this.gameObject);
-            }
+        }
+        else if (other.gameObject.layer == 6)
+        {
+            Destroy(this.gameObject);
         }
     }
 }

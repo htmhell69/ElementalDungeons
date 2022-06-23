@@ -10,10 +10,11 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 10.0f;
     public Transform cameraTransform;
     public Slider hpSlider;
+
     private float velocity = 0;
     private Stats stats;
 
-    private void Start()
+    void Start()
     {
         stats = GetComponent<Stats>();
         characterController = GetComponent<CharacterController>();
@@ -21,7 +22,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
+        if (stats.iFrameTimer > 0)
+        {
+            stats.iFrameTimer -= Time.deltaTime;
+        }
+        if (stats.hp == 0)
+        {
+            Destroy(gameObject);
+        }
         float horizontal = Input.GetAxis("Horizontal") * stats.movementSpeed;
         float vertical = Input.GetAxis("Vertical") * stats.movementSpeed;
 

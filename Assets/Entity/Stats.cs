@@ -13,6 +13,7 @@ public class Stats : MonoBehaviour
     public LevelMultipliers levelMultipliers;
     public float level;
     public float xp;
+    public float iFrameTimer;
 }
 
 [System.Serializable]
@@ -23,12 +24,14 @@ public class LevelMultipliers
     public float movementSpeed;
     public float baseDamage;
     public float manaSpeed;
-    public LevelMultipliers(float maxHp, float maxMana, float manaSpeed, float movementSpeed, float baseDamage)
+    public float iFrameTimer;
+    public LevelMultipliers(float maxHp, float maxMana, float manaSpeed, float movementSpeed, float baseDamage, float iFrameTimer)
     {
         this.maxHp = maxHp;
         this.maxMana = maxMana;
         this.movementSpeed = movementSpeed;
         this.baseDamage = baseDamage;
         this.manaSpeed = manaSpeed;
+        this.iFrameTimer = iFrameTimer;
     }
 }
