@@ -8,16 +8,27 @@ public class SpellHandler : MonoBehaviour
     public SpellBook currentSpellBook;
     public int currentSpell = 0;
     private Stats stats;
+    private PlayerController playerController;
     public Slider manaSlider;
+    private bool canCast;
 
     void Start()
     {
         stats = GetComponent<Stats>();
+        playerController = GetComponent<PlayerController>();
     }
     void Update()
     {
+        if (playerController.ui.isActive && canCast == true)
+        {
+            canCast = false;
+        }
+        if (playerController.ui.isActive && canCast == false)
+        {
+            canCast = true;
+        }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && canCast)
         {
             CastSpell(currentSpellBook.spells[currentSpell]);
         }
@@ -31,20 +42,17 @@ public class SpellHandler : MonoBehaviour
             {
                 currentSpell += 1;
             }
-
         }
         if (stats.mana < stats.maxMana)
         {
-            stats.mana += 1 * Time.deltaTime * stats.level * stats.levelMultipliers.manaSpeed;
+            stats.mana += 1 * Time.deltaTime * stats.manaSpeed;
         }
         manaSlider.value = stats.mana;
-        stats.maxMana = 100 + (stats.level * stats.levelMultipliers.maxMana);
         manaSlider.maxValue = stats.maxMana;
     }
 
     void CastSpell(GameObject spell)
     {
-
         Spell spellScript = spell.GetComponent<Spell>();
         SpellData spellData = spellScript.spellData;
         if (stats.mana >= spellData.manaCost)

@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 10.0f;
     public Transform cameraTransform;
     public Slider hpSlider;
+    public Ui ui;
 
     private float velocity = 0;
     private Stats stats;
@@ -46,7 +47,6 @@ public class PlayerController : MonoBehaviour
         }
 
         hpSlider.value = stats.hp;
-        stats.maxHp = 100 + (stats.level * stats.levelMultipliers.maxHp);
         hpSlider.maxValue = stats.maxHp;
     }
 }

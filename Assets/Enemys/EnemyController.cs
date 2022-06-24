@@ -13,7 +13,6 @@ public class EnemyController : MonoBehaviour
     CharacterController characterController;
     Vector3 idleVector;
     GameObject isFollowing;
-    float freezeTimer;
     void Start()
     {
         stats = GetComponent<Stats>();
@@ -36,9 +35,9 @@ public class EnemyController : MonoBehaviour
             velocity -= gravity * Time.deltaTime;
             characterController.Move(new Vector3(0, velocity, 0));
         }
-        if (freezeTimer > 0)
+        if (stats.freezeTimer > 0)
         {
-            freezeTimer -= Time.deltaTime;
+            stats.freezeTimer -= Time.deltaTime;
         }
         else
         {
@@ -118,7 +117,7 @@ public class EnemyController : MonoBehaviour
         if (other.gameObject == isFollowing)
         {
             Stats otherStats = other.gameObject.GetComponent<Stats>();
-            freezeTimer = 1.5f;
+            stats.freezeTimer = 1.5f;
             if (otherStats.iFrameTimer <= 0)
             {
                 otherStats.hp -= stats.baseDamage;

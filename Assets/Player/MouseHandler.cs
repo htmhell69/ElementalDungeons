@@ -11,20 +11,25 @@ public class MouseHandler : MonoBehaviour
     private float yRotation = 0.0f;
 
     [SerializeField] private bool lockMouse = true;
+    PlayerController playerController;
     private Camera cam;
 
     void Start()
     {
+        playerController = transform.parent.GetComponent<PlayerController>();
         cam = GetComponent<Camera>();
-        if (lockMouse)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
     }
 
     void Update()
     {
+        if (playerController.ui.isActive == true)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         float mouseX = Input.GetAxis("Mouse X") * horizontalSpeed;
         float mouseY = Input.GetAxis("Mouse Y") * verticalSpeed;
 
