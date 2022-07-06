@@ -22,7 +22,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (stats.hp == 0)
+        if (stats.hp <= 0)
         {
             Destroy(gameObject);
         }
@@ -112,7 +112,7 @@ public class EnemyController : MonoBehaviour
         return new Vector3(x, 0, z);
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
         if (other.gameObject == isFollowing)
         {

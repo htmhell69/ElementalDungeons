@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class SpellHandler : MonoBehaviour
 {
     public List<GameObject> currentSpells = new List<GameObject>();
+    public List<int> spellLevels = new List<int>();
     public SpellBook currentSpellBook;
     public int currentSpell = 0;
     private Stats stats;
@@ -16,6 +17,8 @@ public class SpellHandler : MonoBehaviour
     {
         stats = GetComponent<Stats>();
         playerController = GetComponent<PlayerController>();
+        currentSpellBook = ScriptableObject.CreateInstance<SpellBook>();
+        currentSpellBook.spells = GetRandomSpells(4);
     }
     void Update()
     {
@@ -23,18 +26,17 @@ public class SpellHandler : MonoBehaviour
         {
             canCast = false;
         }
-        if (playerController.ui.isActive && canCast == false)
+        if (!playerController.ui.isActive && canCast == false)
         {
             canCast = true;
         }
-
         if (Input.GetMouseButtonDown(0) && canCast)
         {
             CastSpell(currentSpellBook.spells[currentSpell]);
         }
         if (Input.GetMouseButtonDown(1))
         {
-            if (currentSpell >= currentSpellBook.spells.Length)
+            if (currentSpell > currentSpellBook.spells.Length)
             {
                 currentSpell = 0;
             }
@@ -51,9 +53,11 @@ public class SpellHandler : MonoBehaviour
         manaSlider.maxValue = stats.maxMana;
     }
 
-    void CastSpell(GameObject spell)
+    void CastSpell(int spellIndex)
     {
+        GameObject spell = currentSpells[spellIndex];
         Spell spellScript = spell.GetComponent<Spell>();
+        spellScript.level = spellLevels[spellIndex];
         SpellData spellData = spellScript.spellData;
         if (stats.mana >= spellData.manaCost)
         {
@@ -72,7 +76,6 @@ public class SpellHandler : MonoBehaviour
             }
             stats.mana -= spellData.manaCost;
         }
-
     }
 
     void CastSelf(GameObject spell)
@@ -100,5 +103,21 @@ public class SpellHandler : MonoBehaviour
         Vector3 positionOffset = new Vector3(camera.transform.forward.x * spell.transform.localScale.x, 0, camera.transform.forward.z * spell.transform.localScale.z);
         GameObject spellGO = Instantiate(spell, transform.position + positionOffset, camera.transform.localRotation);
         spellGO.GetComponent<Spell>().OnCast();
+    }
+
+    void AddSpell(GameObject spell)
+    {
+        currentSpells.Add(spell);
+        spellLevels.Add(0);
+    }
+
+    int[] GetRandomSpells(int amount)
+    {
+        int[] spellArray = new int[amount];
+        for (int i = 0; i > spellArray.Length; i++)
+        {
+            spellArray[i] = Random.Range(0, currentSpells.Count);
+        }
+        return spellArray;
     }
 }

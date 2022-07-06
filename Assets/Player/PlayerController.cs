@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     private float velocity = 0;
     private Stats stats;
+    public bool canLevelUp;
 
     void Start()
     {
@@ -23,14 +24,37 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown("escape"))
+        {
+            if (ui.currentMenu == Menus.None)
+            {
+                ui.SwitchMenus(Menus.MainMenu);
+            }
+            else if (ui.currentMenu == Menus.MainMenu)
+            {
+                ui.SwitchMenus(Menus.None);
+            }
+            else if (ui.currentMenu == Menus.Inventory)
+            {
+                ui.SwitchMenus(Menus.None);
+            }
+        }
+
+
         if (stats.iFrameTimer > 0)
         {
             stats.iFrameTimer -= Time.deltaTime;
         }
-        if (stats.hp == 0)
+        if (stats.hp <= 0)
         {
             Destroy(gameObject);
         }
+        hpSlider.value = stats.hp;
+        hpSlider.maxValue = stats.maxHp;
+    }
+
+    void FixedUpdate()
+    {
         float horizontal = Input.GetAxis("Horizontal") * stats.movementSpeed;
         float vertical = Input.GetAxis("Vertical") * stats.movementSpeed;
 
@@ -45,9 +69,6 @@ public class PlayerController : MonoBehaviour
             velocity -= gravity * Time.deltaTime;
             characterController.Move(new Vector3(0, velocity, 0));
         }
-
-        hpSlider.value = stats.hp;
-        hpSlider.maxValue = stats.maxHp;
     }
 }
 

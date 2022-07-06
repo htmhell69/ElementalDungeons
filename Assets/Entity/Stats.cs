@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class Stats : MonoBehaviour
 {
     public float maxHp;
@@ -26,34 +26,18 @@ public class Stats : MonoBehaviour
     }
     void Update()
     {
-        if (gameObject.tag == "Player" && xp == level * 100)
+        if (gameObject.tag == "Player" && xp == level * 100 && !playerController.canLevelUp)
         {
-            level += 1;
             xp -= level * 100;
-            playerController.ui.SwitchMenus(Menus.LevelUp);
+            level += 1;
+            playerController.canLevelUp = true;
         }
     }
 
-    public enum EntityStats
+
+
+    public void UpgradeStat(EntityStats stat, float multiplier, bool closeUi)
     {
-        maxHp,
-
-        maxMana,
-        manaSpeed,
-
-        movementSpeed,
-        baseDamage,
-        level,
-        xp,
-        iFrameTimer,
-        freezeTimer,
-        mana,
-        hp,
-    }
-
-    public void UpgradeStat(EntityStats stat)
-    {
-        float multiplier = 0.25f;
         switch (stat)
         {
             case EntityStats.maxHp:
@@ -72,32 +56,59 @@ public class Stats : MonoBehaviour
                 movementSpeed *= multiplier;
                 break;
         }
+        if (playerController.ui.currentMenu == Menus.LevelUp)
+        {
+            playerController.canLevelUp = false;
+        }
+        if (closeUi)
+        {
+            playerController.ui.SwitchMenus(Menus.None);
+        }
+
     }
 
-    public void UpgradeSpeed()
+    public void UpgradeSpell()
     {
-        movementSpeed *= 1.25f;
-        playerController.ui.SwitchMenus(Menus.None);
+        if (playerController.ui.currentMenu == Menus.LevelUp)
+        {
+            playerController.canLevelUp = false;
+        }
+        playerController.ui.callbackFunction = PostUpgradeSpellUi;
+        playerController.ui.SwitchMenus(Menus.SpellChooser);
     }
 
-    public void UpgradeMaxMana()
+    public bool PostUpgradeSpellUi(GameObject button)
     {
-        maxMana *= 1.25f;
-        playerController.ui.SwitchMenus(Menus.None);
+
+        if (button == null)
+        {
+            return false;
+        }
+        else
+        {
+            playerController.ui.SwitchMenus(Menus.None);
+            SpellButtonData buttonData = button.GetComponent<SpellButtonData>();
+            int spellIndex = buttonData.index;
+            GameObject owner = buttonData.owner;
+            owner.GetComponent<SpellHandler>().spellLevels[spellIndex] += 1;
+            return true;
+        }
     }
-    public void UpgradeMaxHp()
-    {
-        maxHp *= 1.25f;
-        playerController.ui.SwitchMenus(Menus.None);
-    }
-    public void UpgradeManaSpeed()
-    {
-        manaSpeed *= 1.25f;
-        playerController.ui.SwitchMenus(Menus.None);
-    }
-    public void UpgradeBaseDamage()
-    {
-        baseDamage *= 10f;
-        playerController.ui.SwitchMenus(Menus.None);
-    }
+}
+
+public enum EntityStats
+{
+    maxHp,
+
+    maxMana,
+    manaSpeed,
+
+    movementSpeed,
+    baseDamage,
+    level,
+    xp,
+    iFrameTimer,
+    freezeTimer,
+    mana,
+    hp
 }

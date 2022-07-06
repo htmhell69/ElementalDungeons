@@ -22,7 +22,8 @@ public class Projectile : Spell
         {
             if (other.gameObject != caster)
             {
-                other.gameObject.GetComponent<Stats>().hp -= spellData.main + caster.GetComponent<Stats>().level * spellData.levelMultiplier;
+                float damage = spellData.main + (spellData.main * ((level - 1) * spellData.levelMultiplier));
+                other.gameObject.GetComponent<Stats>().hp -= damage;
                 if (Random.Range(1, 100) >= spellData.effectChance)
                 {
                     GetComponent<MeshRenderer>().enabled = false;

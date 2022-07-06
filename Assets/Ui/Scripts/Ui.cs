@@ -1,10 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 public class Ui : MonoBehaviour
 {
+    public Func<GameObject, bool> callbackFunction;
     public GameObject levelUp;
+    public GameObject mainMenu;
+    public GameObject spellChooser;
+    public GameObject inventory;
     public bool isActive;
     public Menus currentMenu;
     public Menus previousMenu;
@@ -31,12 +37,27 @@ public class Ui : MonoBehaviour
         }
     }
 
+    public void RunCallBack()
+    {
+        if (callbackFunction != null)
+        {
+            callbackFunction(EventSystem.current.currentSelectedGameObject);
+            callbackFunction = null;
+        }
+    }
+
     public GameObject GetMenu(Menus menu)
     {
         switch (menu)
         {
             case Menus.LevelUp:
                 return levelUp;
+            case Menus.SpellChooser:
+                return spellChooser;
+            case Menus.MainMenu:
+                return mainMenu;
+            case Menus.Inventory:
+                return inventory;
         }
         return null;
     }
@@ -52,10 +73,18 @@ public class Ui : MonoBehaviour
     {
         isActive = false;
     }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
 }
 
 public enum Menus
 {
     None,
-    LevelUp
+    LevelUp,
+    SpellChooser,
+    MainMenu,
+    Inventory
 }

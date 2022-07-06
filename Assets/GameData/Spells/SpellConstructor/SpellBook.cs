@@ -5,6 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Spell Book", menuName = "Spells/Spell Book")]
 public class SpellBook : ScriptableObject
 {
-    public GameObject[] spells = new GameObject[4];
+    public int[] spells = new int[4];
 
 }
